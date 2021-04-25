@@ -1,8 +1,6 @@
-package chapter27;
-
 import java.util.*;
 
-public class MyHashSet<E> implements Collection<E> {
+public class MyHashSet<E extends Comparable<E>> implements Collection<E> {
   // Define the default hash table size. Must be a power of 2
   private static int DEFAULT_INITIAL_CAPACITY = 4;
   
@@ -22,7 +20,8 @@ public class MyHashSet<E> implements Collection<E> {
   private int size = 0; 
   
   // Hash table is an array with each cell that is a linked list
-  private LinkedList<E>[] table;
+  // TODO array of AVL trees instead of LinkedLists
+  private AVLTree<E>[] table;
 
   /** Construct a set with the default capacity and load factor */
   public MyHashSet() {  
@@ -44,7 +43,7 @@ public class MyHashSet<E> implements Collection<E> {
       this.capacity = trimToPowerOf2(initialCapacity);
     
     this.loadFactorThreshold = loadFactorThreshold;    
-    table = new LinkedList[capacity];
+    table = new AVLTree[capacity];
   }
   
   @Override /** Remove all elements from this set */ 
@@ -54,10 +53,16 @@ public class MyHashSet<E> implements Collection<E> {
   }
 
   @Override /** Return true if the element is in the set */
+  // Checks hash and overflow buckets for object
   public boolean contains(Object e) {
+
+    // Get hash code
     int bucketIndex = hash(e.hashCode());
+
+    // If there's something in the hash, see if the object is in overflow bucket
     if (table[bucketIndex] != null) {
-      LinkedList<E> bucket = table[bucketIndex]; 
+      // TODO change to AVLTree
+      AVLTree<E> bucket = table[bucketIndex];
       return bucket.contains(e);
     }
     
@@ -79,12 +84,15 @@ public class MyHashSet<E> implements Collection<E> {
     int bucketIndex = hash(e.hashCode());
     
     // Create a linked list for the bucket if it is not created
+
     if (table[bucketIndex] == null) {
-      table[bucketIndex] = new LinkedList<E>();
+      // TODO change to AVLTree
+      table[bucketIndex] = new AVLTree<E>();
     }
 
     // Add e to hashTable[index]
-    table[bucketIndex].add(e);
+    // TODO change to .insert
+    table[bucketIndex].insert(e);
 
     size++; // Increase size
     
@@ -100,7 +108,8 @@ public class MyHashSet<E> implements Collection<E> {
     
     // Create a linked list for the bucket if it is not created
     if (table[bucketIndex] != null) {
-      LinkedList<E> bucket = table[bucketIndex]; 
+      // TODO change to AVLTree
+      AVLTree<E> bucket = table[bucketIndex];
       bucket.remove(e);
     }
 
@@ -183,7 +192,7 @@ public class MyHashSet<E> implements Collection<E> {
   private void rehash() {
     java.util.ArrayList<E> list = setToList(); // Copy to a list
     capacity <<= 1; // Double capacity      
-    table = new LinkedList[capacity]; // Create a new hash table
+    table = new AVLTree[capacity]; // Create a new hash table
     size = 0; // Reset size 
     
     for (E element: list) {
@@ -192,6 +201,7 @@ public class MyHashSet<E> implements Collection<E> {
   }
 
   /** Copy elements in the hash set to an array list */
+  // Helper function
   private java.util.ArrayList<E> setToList() {
     java.util.ArrayList<E> list = new java.util.ArrayList<>();
     

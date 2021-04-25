@@ -1,5 +1,3 @@
-package chapter27;
-
 import java.util.LinkedList;
 
 public class MyHashMap<K, V> implements MyMap<K, V> {

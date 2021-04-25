@@ -1,5 +1,3 @@
-package chapter27;
-
 public class TestMyHashSet {
   public static void main(String[] args) {
     // Create a MyHashSet
@@ -20,6 +18,6 @@ public class TestMyHashSet {
       System.out.print(s.toUpperCase() + " ");
 
     set.clear();
-    System.out.println("\nElements in set: " + set);
+    System.out.println("\nElements in set after clear: " + set);
   }
 }
